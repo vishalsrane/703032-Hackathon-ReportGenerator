@@ -59,6 +59,7 @@ public class ProcessDataService {
 		while(rows.hasNext()) {
 			if (isFirstRow) {
 				isFirstRow = false;
+				rows.next();
 			}else {
 				Associate associate = new Associate();
 				Iterator<Cell> cellsIterator = rows.next().iterator();
