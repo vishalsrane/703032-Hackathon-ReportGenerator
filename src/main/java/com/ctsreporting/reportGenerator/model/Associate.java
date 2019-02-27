@@ -30,6 +30,8 @@ public class Associate {
 	
 	private String businessUnit;
 	
+	private String contactNumber;
+	
 	@OneToMany(mappedBy = "associate")
 	private Set<EventDetails> eventDetails;
 

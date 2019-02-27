@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ctsreporting.reportGenerator.model.Associate;
+import com.ctsreporting.reportGenerator.model.Event;
 import com.ctsreporting.reportGenerator.repository.AssociateRepository;
+import com.ctsreporting.reportGenerator.repository.EventRepository;
 
 @Service
 public class ProcessDataService {
@@ -27,6 +29,9 @@ public class ProcessDataService {
 	
 	@Autowired
 	private AssociateRepository associateRepository;
+	
+	@Autowired
+	private EventRepository eventRepository;
 	
 	public void processUpdatedExcels() {
 	    saveFile(associateDetailsFileName);
@@ -52,6 +57,68 @@ public class ProcessDataService {
 			}
 		}
 	}
+	
+	public void CreateEventSummary(Iterator<Row> rows) {
+		boolean isFirstRow = true;
+		
+		while(rows.hasNext()) {
+			if (isFirstRow) {
+				isFirstRow = false;
+				rows.next();
+			}else {
+				Event event = new Event();
+				Iterator<Cell> cellsIterator = rows.next().iterator();
+				List<Cell> cellList = new ArrayList<>();
+				cellsIterator.forEachRemaining(cellList::add);
+				String eventId = cellList.get(0).getStringCellValue();
+				Event eventInDb = eventRepository.findByEventId(eventId); //Checking if the associate is already available in the DB
+				if (eventInDb != null) {
+					eventInDb.setId(eventInDb.getId()); //Making sure we do not create the new record for same associate
+				}
+				event.setEventId(cellList.get(0).getStringCellValue());
+				event.setMonth(cellList.get(1).getStringCellValue());
+				event.setBaseLocation(cellList.get(2).getStringCellValue());
+				event.setBenificiaryname(cellList.get(3).getStringCellValue());
+				event.setVenue(cellList.get(4).getStringCellValue());
+				event.setCouncil(cellList.get(5).getStringCellValue());
+				event.setProject(cellList.get(6).getStringCellValue());
+				event.setCategory(cellList.get(7).getStringCellValue());
+				event.setName(cellList.get(8).getStringCellValue());
+				event.setDescription(cellList.get(9).getStringCellValue());
+				event.setEventdate(cellList.get(10).getDateCellValue());
+				event.setVolunteersCount((long)cellList.get(11).getNumericCellValue());
+				event.setVolunteersHours((long)cellList.get(12).getNumericCellValue());
+				event.setVolunteersTravelHours((long)cellList.get(13).getNumericCellValue());
+				event.setLivesImpacted((long)cellList.get(15).getNumericCellValue());
+				event.setActivityType((long)cellList.get(16).getNumericCellValue());
+				event.setStatus(cellList.get(17).getStringCellValue());
+				String pocIds [] = cellList.get(18).getStringCellValue().split(";");
+				String pocNames [] = cellList.get(19).getStringCellValue().split(";");
+				String pocContacts [] = cellList.get(20).getStringCellValue().split(";");
+				Associate poc = new Associate();
+				for (int i = 0; i<pocIds.length; i++) {
+					Long associateId = Long.valueOf(pocIds[i]);
+					Associate associateInDB = associateRepository.findByAssociateId(associateId);
+					if (poc != null) {
+						associateInDB.setName(pocNames[i]);
+						associateInDB.setContactNumber(pocContacts[i]);
+						poc = associateRepository.save(associateInDB);
+					}else {
+						poc.setAssociateId(associateId);
+						poc.setName(pocNames[i]);
+						poc.setContactNumber(pocContacts[i]);
+						poc = associateRepository.save(poc);
+					}
+				}
+				event.getPoc().add(poc);
+				eventRepository.save(event);
+			}
+		}
+	}
+	
+//	public Associate saveOrUpdateAssociate(Long associateId) {
+//		
+//	}
 	
 	public void createAssociate(Iterator<Row> rows) {
 		boolean isFirstRow = true;

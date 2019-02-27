@@ -32,7 +32,7 @@ public class Event {
 	
 	private String venue;
 	
-	private String counsil;
+	private String council;
 	
 	private String project;
 	
@@ -52,7 +52,7 @@ public class Event {
 	
 	private Long livesImpacted;
 	
-	private String activityType;
+	private Long activityType;
 	
 	private String status;
 	

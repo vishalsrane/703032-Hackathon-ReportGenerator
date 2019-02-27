@@ -7,5 +7,6 @@ import com.ctsreporting.reportGenerator.model.Event;
 
 @Repository
 public interface EventRepository extends CrudRepository<Event, Long>{
-
+	
+	Event findByEventId(String eventId);
 }
