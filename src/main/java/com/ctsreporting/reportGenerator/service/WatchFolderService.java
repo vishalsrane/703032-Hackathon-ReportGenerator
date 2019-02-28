@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class WatchFolderService implements CommandLineRunner{
 	
-	static final String FOLDER_TO_MONITOR = "/home/vishal/projects/hackfse/folder-to-monitor"; //"C:\\hck-fse\\folder-to-monitor";
+	static final String FOLDER_TO_MONITOR = "C:\\hck-fse\\folder-to-monitor"; //"/home/vishal/projects/hackfse/folder-to-monitor";
 	
 	@Autowired
 	private WatchService watchService;

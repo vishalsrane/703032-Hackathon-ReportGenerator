@@ -17,15 +17,17 @@ import org.springframework.stereotype.Service;
 
 import com.ctsreporting.reportGenerator.model.Associate;
 import com.ctsreporting.reportGenerator.model.Event;
+import com.ctsreporting.reportGenerator.model.EventDetails;
 import com.ctsreporting.reportGenerator.repository.AssociateRepository;
+import com.ctsreporting.reportGenerator.repository.EventDetailsRepository;
 import com.ctsreporting.reportGenerator.repository.EventRepository;
 
 @Service
 public class ProcessDataService {
 	
 	private static String associateDetailsFileName = "AssociateDetails.xls";
-	private static String eventSummaryFileName = "Outreach Events Summary.xls";
-	private static String eventImformationFileName = "Outreach Event Imformation";
+	private static String eventSummaryFileName = "EventsSummary.xls";
+	private static String eventImformationFileName = "EventImformation";
 	
 	@Autowired
 	private AssociateRepository associateRepository;
@@ -33,8 +35,13 @@ public class ProcessDataService {
 	@Autowired
 	private EventRepository eventRepository;
 	
+	@Autowired
+	private EventDetailsRepository eventDetailsRepository;
+	
 	public void processUpdatedExcels() {
 	    saveFile(associateDetailsFileName);
+	    saveFile(eventSummaryFileName);
+	    saveFile(eventImformationFileName);
 	}
 	
 	public void saveFile(String filename) {
@@ -46,6 +53,10 @@ public class ProcessDataService {
 			Iterator<Row> rows =sheet.iterator();
 			if (filename.equals(associateDetailsFileName)) {
 				createAssociate(rows);
+			}else if (filename.equals(eventSummaryFileName)) {
+				CreateEventSummary(rows);
+			}else if (filename.equals(eventImformationFileName)) {
+				CreateEventSummary(rows);
 			}
 		} catch (EncryptedDocumentException | IOException e) {
 			e.printStackTrace();
@@ -54,6 +65,35 @@ public class ProcessDataService {
 				workbook.close();
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void createEventDetails(Iterator<Row> rows) {
+		boolean isFirstRow = true;
+		while(rows.hasNext()) {
+			if (isFirstRow) {
+				isFirstRow = false;
+				rows.next();
+			}else {
+				Event event = new Event();
+				Associate associate = new Associate();
+				EventDetails eventDetails = new EventDetails();
+				Iterator<Cell> cellsIterator = rows.next().iterator();
+				List<Cell> cellList = new ArrayList<>();
+				cellsIterator.forEachRemaining(cellList::add);
+				String eventId = cellList.get(0).getStringCellValue();
+				Long associateId = (long)cellList.get(7).getNumericCellValue();
+				event = eventRepository.findByEventId(eventId);
+				associate = associateRepository.findByAssociateId(associateId);
+				EventDetails eventDetailsInDb = eventDetailsRepository.findAssociateIdAndEventId(associateId, eventId);
+				if (eventDetailsInDb != null) {
+					eventDetails.setId(eventDetailsInDb.getId());
+				}
+				eventDetails.setVolunteerHours((long)cellList.get(9).getNumericCellValue());
+				eventDetails.setTravelHours((long)cellList.get(10).getNumericCellValue());
+				eventDetails.setAssociate(associate);
+				eventDetails.setEvent(event);
 			}
 		}
 	}
@@ -71,9 +111,9 @@ public class ProcessDataService {
 				List<Cell> cellList = new ArrayList<>();
 				cellsIterator.forEachRemaining(cellList::add);
 				String eventId = cellList.get(0).getStringCellValue();
-				Event eventInDb = eventRepository.findByEventId(eventId); //Checking if the associate is already available in the DB
+				Event eventInDb = eventRepository.findByEventId(eventId); //Checking if the event is already available in the DB
 				if (eventInDb != null) {
-					eventInDb.setId(eventInDb.getId()); //Making sure we do not create the new record for same associate
+					event.setId(eventInDb.getId()); //Making sure we do not create the new record for same associate
 				}
 				event.setEventId(cellList.get(0).getStringCellValue());
 				event.setMonth(cellList.get(1).getStringCellValue());
@@ -109,16 +149,13 @@ public class ProcessDataService {
 						poc.setContactNumber(pocContacts[i]);
 						poc = associateRepository.save(poc);
 					}
+					event.getPoc().add(poc);
 				}
-				event.getPoc().add(poc);
 				eventRepository.save(event);
 			}
 		}
 	}
 	
-//	public Associate saveOrUpdateAssociate(Long associateId) {
-//		
-//	}
 	
 	public void createAssociate(Iterator<Row> rows) {
 		boolean isFirstRow = true;
