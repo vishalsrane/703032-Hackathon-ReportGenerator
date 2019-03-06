@@ -14,9 +14,169 @@ import javax.persistence.OneToMany;
 import lombok.Data;
 
 @Entity
-@Data
+//@Data
 public class Event {
 	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(String eventId) {
+		this.eventId = eventId;
+	}
+
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
+	}
+
+	public String getBaseLocation() {
+		return baseLocation;
+	}
+
+	public void setBaseLocation(String baseLocation) {
+		this.baseLocation = baseLocation;
+	}
+
+	public String getBenificiaryname() {
+		return benificiaryname;
+	}
+
+	public void setBenificiaryname(String benificiaryname) {
+		this.benificiaryname = benificiaryname;
+	}
+
+	public String getVenue() {
+		return venue;
+	}
+
+	public void setVenue(String venue) {
+		this.venue = venue;
+	}
+
+	public String getCouncil() {
+		return council;
+	}
+
+	public void setCouncil(String council) {
+		this.council = council;
+	}
+
+	public String getProject() {
+		return project;
+	}
+
+	public void setProject(String project) {
+		this.project = project;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getEventdate() {
+		return eventdate;
+	}
+
+	public void setEventdate(Date eventdate) {
+		this.eventdate = eventdate;
+	}
+
+	public Long getVolunteersCount() {
+		return volunteersCount;
+	}
+
+	public void setVolunteersCount(Long volunteersCount) {
+		this.volunteersCount = volunteersCount;
+	}
+
+	public Long getVolunteersHours() {
+		return volunteersHours;
+	}
+
+	public void setVolunteersHours(Long volunteersHours) {
+		this.volunteersHours = volunteersHours;
+	}
+
+	public Long getVolunteersTravelHours() {
+		return volunteersTravelHours;
+	}
+
+	public void setVolunteersTravelHours(Long volunteersTravelHours) {
+		this.volunteersTravelHours = volunteersTravelHours;
+	}
+
+	public Long getLivesImpacted() {
+		return livesImpacted;
+	}
+
+	public void setLivesImpacted(Long livesImpacted) {
+		this.livesImpacted = livesImpacted;
+	}
+
+	public Long getActivityType() {
+		return activityType;
+	}
+
+	public void setActivityType(Long activityType) {
+		this.activityType = activityType;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Set<Associate> getPoc() {
+		return poc;
+	}
+
+	public void setPoc(Set<Associate> poc) {
+		this.poc = poc;
+	}
+
+	public Set<EventDetails> getEventDetails() {
+		return eventDetails;
+	}
+
+	public void setEventDetails(Set<EventDetails> eventDetails) {
+		this.eventDetails = eventDetails;
+	}
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;

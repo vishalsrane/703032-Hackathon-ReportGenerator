@@ -15,13 +15,53 @@ import lombok.Data;
 	   uniqueConstraints = @UniqueConstraint(columnNames={"ASSOCIATE_ID", "EVENT_ID"})
 )
 @Entity
-@Data
+//@Data
 public class EventDetails {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getVolunteerHours() {
+		return volunteerHours;
+	}
+
+	public void setVolunteerHours(Long volunteerHours) {
+		this.volunteerHours = volunteerHours;
+	}
+
+	public Long getTravelHours() {
+		return travelHours;
+	}
+
+	public void setTravelHours(Long travelHours) {
+		this.travelHours = travelHours;
+	}
+
+	public Associate getAssociate() {
+		return associate;
+	}
+
+	public void setAssociate(Associate associate) {
+		this.associate = associate;
+	}
+
+	public Event getEvent() {
+		return event;
+	}
+
+	public void setEvent(Event event) {
+		this.event = event;
+	}
+
 	private Long volunteerHours;
 	private Long travelHours;
 	
