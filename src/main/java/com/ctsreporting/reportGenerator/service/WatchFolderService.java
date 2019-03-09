@@ -17,13 +17,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class WatchFolderService implements CommandLineRunner{
 	
-	static final String FOLDER_TO_MONITOR = "C:\\hck-fse\\folder-to-monitor"; //"/home/vishal/projects/hackfse/folder-to-monitor";
+	static final String FOLDER_TO_MONITOR = "/home/vishal/projects/hackfse/folder-to-monitor/final-files"; //"C:\\hck-fse\\folder-to-monitor"; //
 	
 	@Autowired
 	private WatchService watchService;
 	
+	@Autowired
+	private ProcessDataService processDataService;
+	
+	
 	@Override
 	public void run(String... args) throws IOException, InterruptedException{
+		processDataService.processUpdatedExcels();
 		Path path = Paths.get(FOLDER_TO_MONITOR);
 		path.register(
 		          watchService, 

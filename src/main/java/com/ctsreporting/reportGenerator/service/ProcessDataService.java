@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -107,7 +108,8 @@ public class ProcessDataService {
 				rows.next();
 			}else {
 				Event event = new Event();
-				Iterator<Cell> cellsIterator = rows.next().iterator();
+				Row row = rows.next();
+				Iterator<Cell> cellsIterator = row.iterator();
 				List<Cell> cellList = new ArrayList<>();
 				cellsIterator.forEachRemaining(cellList::add);
 				String eventId = cellList.get(0).getStringCellValue();
@@ -132,24 +134,48 @@ public class ProcessDataService {
 				event.setLivesImpacted((long)cellList.get(15).getNumericCellValue());
 				event.setActivityType((long)cellList.get(16).getNumericCellValue());
 				event.setStatus(cellList.get(17).getStringCellValue());
-				String pocIds [] = cellList.get(18).getStringCellValue().split(";");
-				String pocNames [] = cellList.get(19).getStringCellValue().split(";");
-				String pocContacts [] = cellList.get(20).getStringCellValue().split(";");
-				Associate poc = new Associate();
-				for (int i = 0; i<pocIds.length; i++) {
-					Long associateId = Long.valueOf(pocIds[i]);
+				Cell pocCell = cellList.get(18);
+				pocCell.setCellType(CellType.STRING);
+				String pocId = pocCell.getStringCellValue();
+				String pocName = cellList.get(19).getStringCellValue();
+				Cell contactCell = cellList.get(20);
+				contactCell.setCellType(CellType.STRING);
+				String pocContact = contactCell.getStringCellValue();
+				if (pocId.contains(";")) {
+					String pocIds [] = pocId.split(";");
+					String pocNames [] = pocName.split(";");
+					String pocContacts [] = pocContact.split(";");
+					
+					for (int i = 0; i<pocIds.length; i++) {
+						Associate poc = new Associate();
+						Long associateId = Long.valueOf(pocIds[i]);
+						Associate associateInDB = associateRepository.findByAssociateId(associateId);
+						if (associateInDB != null) {
+							associateInDB.setName(pocNames[i]);
+							associateInDB.setContactNumber(pocContacts[i]);
+							poc = associateRepository.save(associateInDB);
+						}else {
+							poc.setAssociateId(associateId);
+							poc.setName(pocNames[i]);
+							poc.setContactNumber(pocContacts[i]);
+							poc = associateRepository.save(poc);
+						}
+						event.getPoc().add(poc);
+					}
+				}else {
+					Associate poc = new Associate();
+					Long associateId = Long.valueOf(pocId);
 					Associate associateInDB = associateRepository.findByAssociateId(associateId);
-					if (poc != null) {
-						associateInDB.setName(pocNames[i]);
-						associateInDB.setContactNumber(pocContacts[i]);
+					if (associateInDB != null) {
+						associateInDB.setName(pocName);
+						associateInDB.setContactNumber(pocContact);
 						poc = associateRepository.save(associateInDB);
 					}else {
 						poc.setAssociateId(associateId);
-						poc.setName(pocNames[i]);
-						poc.setContactNumber(pocContacts[i]);
+						poc.setName(pocName);
+						poc.setContactNumber(pocContact);
 						poc = associateRepository.save(poc);
 					}
-					event.getPoc().add(poc);
 				}
 				eventRepository.save(event);
 			}
