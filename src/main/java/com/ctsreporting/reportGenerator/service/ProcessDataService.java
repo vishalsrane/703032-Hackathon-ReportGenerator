@@ -28,7 +28,7 @@ public class ProcessDataService {
 	
 	private static String associateDetailsFileName = "AssociateDetails.xls";
 	private static String eventSummaryFileName = "EventsSummary.xls";
-	private static String eventImformationFileName = "EventImformation";
+	private static String eventDetailFileName = "Eventdetails.xls";
 	
 	@Autowired
 	private AssociateRepository associateRepository;
@@ -42,7 +42,7 @@ public class ProcessDataService {
 	public void processUpdatedExcels() {
 	    saveFile(associateDetailsFileName);
 	    saveFile(eventSummaryFileName);
-	    saveFile(eventImformationFileName);
+	    saveFile(eventDetailFileName);
 	}
 	
 	public void saveFile(String filename) {
@@ -56,8 +56,8 @@ public class ProcessDataService {
 				createAssociate(rows);
 			}else if (filename.equals(eventSummaryFileName)) {
 				CreateEventSummary(rows);
-			}else if (filename.equals(eventImformationFileName)) {
-				CreateEventSummary(rows);
+			}else if (filename.equals(eventDetailFileName)) {
+				createEventDetails(rows);
 			}
 		} catch (EncryptedDocumentException | IOException e) {
 			e.printStackTrace();
@@ -95,6 +95,7 @@ public class ProcessDataService {
 				eventDetails.setTravelHours((long)cellList.get(10).getNumericCellValue());
 				eventDetails.setAssociate(associate);
 				eventDetails.setEvent(event);
+				eventDetailsRepository.save(eventDetails);
 			}
 		}
 	}

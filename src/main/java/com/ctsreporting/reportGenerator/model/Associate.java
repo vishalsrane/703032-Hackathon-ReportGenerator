@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.Data;
@@ -16,7 +17,7 @@ import lombok.Data;
 public class Associate {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(unique = true)
@@ -98,5 +99,16 @@ public class Associate {
 	
 	@OneToMany(mappedBy = "associate")
 	private Set<EventDetails> eventDetails;
+	
+//	public Event getEvent() {
+//		return event;
+//	}
+//
+//	public void setEvent(Event event) {
+//		this.event = event;
+//	}
+
+//	@ManyToOne
+//	private Event event;
 
 }
