@@ -19,7 +19,7 @@ import lombok.Data;
 public class EventDetails {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
 	public Long getId() {
