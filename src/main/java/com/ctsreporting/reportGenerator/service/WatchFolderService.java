@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
+import com.ctsreporting.reportGenerator.repository.AssociateRepository;
+
 //code snippets were taken from https://www.baeldung.com/java-nio2-watchservice
 
 @Service
@@ -25,10 +27,15 @@ public class WatchFolderService implements CommandLineRunner{
 	@Autowired
 	private ProcessDataService processDataService;
 	
+	@Autowired
+	private AssociateRepository associateRepository;
+	
 	
 	@Override
 	public void run(String... args) throws IOException, InterruptedException{
-		processDataService.processUpdatedExcels();
+//		processDataService.processUpdatedExcels();
+		Long headCount = Long.valueOf(associateRepository.associatesCount());
+    	System.out.println(headCount);
 		Path path = Paths.get(FOLDER_TO_MONITOR);
 		path.register(
 		          watchService, 

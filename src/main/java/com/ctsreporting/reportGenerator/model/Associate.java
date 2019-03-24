@@ -1,5 +1,6 @@
 package com.ctsreporting.reportGenerator.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -91,24 +92,23 @@ public class Associate {
 		this.eventDetails = eventDetails;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	private String location;
 	
 	private String businessUnit;
 	
 	private String contactNumber;
 	
-	@OneToMany(mappedBy = "associate")
-	private Set<EventDetails> eventDetails;
+	private String role;
 	
-//	public Event getEvent() {
-//		return event;
-//	}
-//
-//	public void setEvent(Event event) {
-//		this.event = event;
-//	}
-
-//	@ManyToOne
-//	private Event event;
+	@OneToMany(mappedBy = "associate")
+	public Set<EventDetails> eventDetails = new HashSet<>();
 
 }

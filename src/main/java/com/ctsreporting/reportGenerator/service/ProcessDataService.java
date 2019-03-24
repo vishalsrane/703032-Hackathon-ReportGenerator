@@ -170,11 +170,13 @@ public class ProcessDataService {
 					if (associateInDB != null) {
 						associateInDB.setName(pocName);
 						associateInDB.setContactNumber(pocContact);
+						associateInDB.setRole("POC");
 						poc = associateRepository.save(associateInDB);
 					}else {
 						poc.setAssociateId(associateId);
 						poc.setName(pocName);
 						poc.setContactNumber(pocContact);
+						poc.setRole("POC");
 						poc = associateRepository.save(poc);
 					}
 				}

@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Map;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
+
+import java.util.Date;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +27,10 @@ public class ChartService {
     	             .collect(groupingBy(Associate::getBusinessUnit, counting()));
 		return numberOfStudentsByCountry;
 	}
+    
+    public void participationMatrics(String location, String bu, Date fromTime, Date toTime) {
+//    	Long headCount = Long.valueOf(associateRepository.findAssociates().size());
+//    	System.out.println(headCount);
+    }
 
 }

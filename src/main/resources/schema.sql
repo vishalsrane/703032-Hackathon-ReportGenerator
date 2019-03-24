@@ -1,10 +1,12 @@
 --drop schema outreachdata;
 --create schema outreachdata;
 
-drop table if exists associate;
-drop table if exists event;
-drop table if exists event_poc;
 drop table if exists event_details;
+drop table if exists event_poc;
+drop table if exists event;
+drop table if exists associate;
+
+
 
 create table associate (
        id bigint not null auto_increment,
@@ -14,6 +16,7 @@ create table associate (
         designation varchar(255),
         location varchar(255),
         name varchar(255),
+        role varchar(255),
         primary key (id)
 );
 
