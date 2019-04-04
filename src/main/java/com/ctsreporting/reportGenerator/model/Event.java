@@ -10,8 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
-import lombok.Data;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 //@Data
@@ -202,6 +202,7 @@ public class Event {
 	
 	private String description;
 	
+	@Temporal(TemporalType.DATE)
 	private Date eventdate;
 	
 	private Long volunteersCount;

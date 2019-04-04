@@ -29,7 +29,7 @@ create table event (
         council varchar(255),
         description varchar(255),
         event_id varchar(255),
-        eventdate datetime,
+        eventdate date,
         lives_impacted bigint,
         month varchar(255),
         name varchar(255),

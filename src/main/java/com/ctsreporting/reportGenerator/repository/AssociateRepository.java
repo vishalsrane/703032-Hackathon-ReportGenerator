@@ -21,4 +21,7 @@ public interface AssociateRepository extends CrudRepository<Associate, Long>{
 	
 	@Query("from Associate a where a.role in ?1")
 	List<Associate> findAllUsers(@Param("roles") List<String> roles);
+	
+	@Query(value="select distinct(a.business_unit) from associate a where a.business_unit is not null", nativeQuery = true)
+	List<String> getAllBusinessUnits();
 }
